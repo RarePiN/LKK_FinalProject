@@ -20,7 +20,7 @@ struct User{
         string id;
         string psw;
         char type;
-}
+};
 
 class Client{
 
