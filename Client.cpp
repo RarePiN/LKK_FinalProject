@@ -26,13 +26,13 @@ class Client{
 
         private:
                 // ===========================[Values]=============================
-                User User;        // Current User Info
+                User CurrentUser;        // Current User Info
                 bool LoggedIn;    // Log In Status
 
                 void init() {     // Initialize the client.
-                        User.id = "Nil";
-                        User.psw = "Nil";
-                        User.type = '/';
+                        CurrentUser.id = "Nil";
+                        CurrentUser.psw = "Nil";
+                        CurrentUser.type = '/';
                         LoggedIn = false;
                         return;
                 }
@@ -235,6 +235,31 @@ class Client{
                         return;
                 }
 
+                void logInAttempt(string acc, string pas) {
+                        return;
+                }
+
+                void logIn() {
+                        while (LoggedIn == false) {
+                                int n = optionMenu(4, "Welcome to GUHK Student Portal!", {"Log In","Register","Guest Mode","Quit"});
+                                User temp;
+                                vector<string> l;
+                                if (n == 0) {
+                                        textInput("Log In",2,{"ID / Email","Password"},{"0","1"},l);
+                                } else if (n == 1) {
+                                        textInput("Register",3,{"Account ID","Email","Password"},{"0","0","1"},l);
+                                } else if (n == 2) {
+                                        LoggedIn = true;
+                                        temp.id = "GUEST";
+                                        temp.psw = "GUEST";
+                                        temp.type = 0;
+                                }
+                                if (n == 3) return;
+                        }
+
+                        return;
+                }
+
                 void test() {
                         clr();
                         cout << "////////////// TESTING //////////////" << endl;
@@ -251,7 +276,8 @@ class Client{
 
                 void start() {
                         init();
-                        test();
+                        logIn();
+
                         return;
                 }
 
