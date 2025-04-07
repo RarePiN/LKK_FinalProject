@@ -44,9 +44,25 @@ class Client{
                         return;
                 }
 
+                void logo() {
+                        cout << "[" << YELLOW << "GU" << CYAN << "HK" << MAGENTA << " Student Portal" << RESET << "]" << endl;
+                        return;
+                }
+
                 char keyPress() {
         		char key = _getch(); // Get the key pressed
                         return key;
+                }
+
+                bool isWord(char c) {
+                        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
+                            (c == '!' || c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' ||
+                             c == '*' || c == '(' || c == ')' || c == '_' || c == '+' || c == '-' || c == '=' || c == '.' || c == ',' || c == '<' || c == '>' || c == '?' || c == ':' ||
+                             c == '"' || c == ';')) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                 }
 
                 bool validCheck(char c) {    // Check if input is valid
@@ -62,11 +78,13 @@ class Client{
                 }
 
                 int optionMenu(int c, string q, vector<string> options) {       // UI for choosing options    c: Count of total options
+
                         int chosen = 0;
                         char key;
                         string l;
 
                         clr();
+                        logo();
 
                         cout << endl << "    " << q << endl << endl;
 
@@ -105,6 +123,7 @@ class Client{
                                         }
 
                                         clr();
+                                        logo();
                                         cout << endl << "    " << q << endl << endl;
 
                                         for (int i = 0; i < c; i++) {
@@ -131,11 +150,16 @@ class Client{
                         return chosen; // Return the option chosen
                 }
 
-                void textInput(int c, vector<string> f, vector<string> t, vector<string> & r) {        // UI for text inputs    c: number of fields   f: field names  t: field types l: field string
+                void textInput(string message, int c, vector<string> f, vector<string> t, vector<string> & r) {        // UI for text inputs    c: number of fields   f: field names  t: field types l: field string
                         
                         vector<string> l;
                         for (int z = 0; z < c; z++) {
                                 l.push_back("");
+                        }
+
+                        bool check = false;
+                        for (int i = 0; i < t.size(); i++) {
+                                if (t[i] == "1") check = true;
                         }
 
                         for (int i = 0; i < c; i++) {
@@ -147,10 +171,13 @@ class Client{
                                 while (true) {     // Loop until enter is pressed
 
                                         clr();
+                                        logo();
+                                        cout << endl;
+                                        cout << "       " << message << endl << endl;
 
                                         // PREVIOUS FIELDS
                                         for (int j = 0; j < i; j++) {
-                                                if (t[j] == "1") {
+                                                if (t[j] == "1" and mode == 0) {
                                                         temp = "";
                                                         for (int z = 0; z < l[j].length(); z++) temp += '*';
                                                 }
@@ -159,7 +186,7 @@ class Client{
                                         }
 
                                         // CURRENT FIELD
-                                        if (t[i] == "1") {
+                                        if (t[i] == "1" and mode == 0) {
                                                 temp = "";
                                                 for (int z = 0; z < l[i].length(); z++) temp += '*';
                                         }
@@ -168,7 +195,7 @@ class Client{
 
                                         // Later FIELDS
                                         for (int j = i + 1; j < c; j++) {
-                                                if (t[j] == "1") {
+                                                if (t[j] == "1" and mode == 0) {
                                                         temp = "";
                                                         for (int z = 0; z < l[j].length(); z++) temp += '*';
                                                 }
@@ -176,18 +203,25 @@ class Client{
                                                 cout << f[j] << ": " << temp << endl;
                                         }
 
+                                        if (check and mode == 0) cout << endl << endl << YELLOW << "(Press / to reveal password.)" << RESET << endl;
+                                        if (check and mode == 1) cout << endl << endl << YELLOW << "(Press / to hide password.)" << RESET << endl;
+
                                         key = keyPress();
 
                                         if (key == 27) return;   // ESC is pressed
                                         if (key == 13) break;   // Enter is pressed
 
-                                        if (validCheck(key) and key != 8 and key != 13 and key != 27) {
+                                        if (isWord(key) and validCheck(key) and key != 8 and key != 72) {
                                                 l[i].push_back(key);
                                         }
                                         if (key == 8) {
                                                 if (l[i].length() > 0) {
                                                         l[i].pop_back();
                                                 }
+                                        }
+                                        if (key == '/') {          // / pressed REVEAL PASSWORD
+                                                if (mode == 0) mode = 1;
+                                                else mode = 0;
                                         }
 
                                 }
@@ -207,7 +241,7 @@ class Client{
                         cout << optionMenu(5, "Test Question", {"Option A","Option B","Option C","Option D","Option E"});
 
                         vector<string> l;
-                        textInput(3,{"Account","Password","Confirm"},{"0","1","0"},l);
+                        textInput("Test Message",3,{"Account","Password","Confirm"},{"0","1","0"},l);
 
                         for (int i = 0 ; i < l.size(); i++) cout << l[i] << endl;
                         return;
