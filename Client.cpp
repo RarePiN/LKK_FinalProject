@@ -5,6 +5,8 @@
 #include <ctime>
 #include <conio.h>
 #include <windows.h>
+#include <random>
+#include <chrono>
 using namespace std;
 
 // Coloured Text For Terminal.
@@ -77,7 +79,38 @@ class Client{
                         return false;
                 }
 
-                int optionMenu(int c, string q, vector<string> options) {       // UI for choosing options    c: Count of total options
+                string genKey() {
+                        string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                "abcdefghijklmnopqrstuvwxyz"
+                                "0123456789";
+                        int length = 32;
+
+                        unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+                        mt19937_64 generator(seed);
+                        uniform_int_distribution<int> distribution(0, charset.size() - 1);
+
+                        string result;
+                        result.reserve(length);
+
+                            
+                        for(int i = 0; i < length; ++i) {
+                                result += charset[distribution(generator)];
+                        }
+                        
+                        return result;
+                }
+
+                
+
+                int optionMenu(int c, int MsgC, string q, vector<string> options) {       // UI for choosing options    c: Count of total options
+                        string color[7] = {"\033[0m", "\033[31m","\033[32m","\033[33m","\033[34m","\033[35m","\033[36m"};
+                        //RESET   "\033[0m"
+                        //RED     "\033[31m"
+                        //GREEN   "\033[32m"
+                        //YELLOW  "\033[33m"
+                        //BLUE    "\033[34m"
+                        //MAGENTA "\033[35m"
+                        //CYAN    "\033[36m"
 
                         int chosen = 0;
                         char key;
@@ -86,7 +119,7 @@ class Client{
                         clr();
                         logo();
 
-                        cout << endl << "    " << q << endl << endl;
+                        cout << endl << "    " << color[MsgC] << q << color[0] << endl << endl;
 
                         for (int i = 0; i < c; i++) {
                                 l = "";
@@ -241,7 +274,7 @@ class Client{
 
                 void logIn() {
                         while (LoggedIn == false) {
-                                int n = optionMenu(4, "Welcome to GUHK Student Portal!", {"Log In","Register","Guest Mode","Quit"});
+                                int n = optionMenu(4, 0, "Welcome to GUHK Student Portal!", {"Log In","Register","Guest Mode","Quit"});
                                 User temp;
                                 vector<string> l;
                                 if (n == 0) {
@@ -263,12 +296,7 @@ class Client{
                 void test() {
                         clr();
                         cout << "////////////// TESTING //////////////" << endl;
-                        cout << optionMenu(5, "Test Question", {"Option A","Option B","Option C","Option D","Option E"});
-
-                        vector<string> l;
-                        textInput("Test Message",3,{"Account","Password","Confirm"},{"0","1","0"},l);
-
-                        for (int i = 0 ; i < l.size(); i++) cout << l[i] << endl;
+                        logIn();
                         return;
                 }
 
@@ -276,7 +304,7 @@ class Client{
 
                 void start() {
                         init();
-                        logIn();
+                        test();
 
                         return;
                 }
